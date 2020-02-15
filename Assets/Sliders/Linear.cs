@@ -8,4 +8,8 @@ public static class Linear {
     return 1 - x/max;
   }
 
+  public static float getPoint(float x ) {
+    return 1 - x;
+  }
+
 }

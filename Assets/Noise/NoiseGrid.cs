@@ -20,4 +20,8 @@ public static class NoiseGrid {
 
     return noise_grid;
   }
+
+  public static float[,] genNoise(int width, int height, float scale) {
+    return genNoise(width, height, 1,0,scale);
+  }
 }

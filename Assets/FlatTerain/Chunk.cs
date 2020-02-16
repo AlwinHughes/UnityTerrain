@@ -14,7 +14,7 @@ public class Chunk {
   //private MeshFilter mesh_filter;
   
 
-  
+  public GameObject mesh_obj;
 
 
   private Vector3[] verts;

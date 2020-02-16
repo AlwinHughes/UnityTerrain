@@ -18,6 +18,7 @@ public class TerrainFace {
   float[,] noise_grid;
 
   public TerrainFace(Mesh mesh, int res, Vector3 localUp, float radius) {
+
     this.mesh = mesh;
     this.res = res;
     this.localUp = localUp;

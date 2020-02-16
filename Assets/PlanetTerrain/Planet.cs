@@ -18,6 +18,58 @@ public class Planet : MonoBehaviour
   [Range(1f,10f)]
   public float scale = 1f;
 
+
+  PlanetOptions planet_options = new PlanetOptions(3f, 2f, 4f);
+
+  void OnValidate() {
+    init();
+    generateMesh();
+  }
+
+
+
+  void init(){
+
+    Debug.Log("init");
+
+    if(mesh_filters == null || mesh_filters.Length == 0) {
+      Debug.Log("new mesh filters");
+      mesh_filters = new MeshFilter[6];
+    }
+    this.terrain_faces = new TerrainFace[6];
+
+    Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back};
+
+    //create radius of each vertex
+    for(int i = 0; i < vertex_radiuses.Length; i++) {
+       vertex_radiuses[i] = planet_options.min + (planet_options.max - planet_options.min) * Random.Range(0f, 1f);
+    }
+
+
+    for(int i = 0; i < 6; i++) {
+
+      if(mesh_filters[i] == null) {
+        GameObject meshobj = new GameObject("mesh");
+        meshobj.transform.parent = transform;
+
+        meshobj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
+        mesh_filters[i] = meshobj.AddComponent<MeshFilter>();
+        mesh_filters[i].mesh = new Mesh();
+
+      }
+        //terrain_faces[i] = new TerrainFace(mesh_filters[i].sharedMesh, res, directions[i], radius);
+        terrain_faces[i] = new TerrainFace(mesh_filters[i].sharedMesh, res, directions[i], planet_options);
+    }
+  }
+
+
+  void generateMesh() {
+    Debug.Log("gen mesh");
+    foreach( TerrainFace tf in terrain_faces) {
+      tf.constructMesh();
+    }
+  }
+
   /*
    * Verticies:
    *
@@ -56,53 +108,6 @@ public class Planet : MonoBehaviour
     /*right*/{2,1,7,6},
     /*back*/{0,1,4,5},
     /*bottom*/{4,5,7,6}};
-
-  PlanetOptions planet_options = new PlanetOptions(3f, 2f, 4f);
-
-  void OnValidate() {
-    init();
-    generateMesh();
-  }
-
-  //Random rand = new Random();
-
-  void init(){
-
-    if(mesh_filters == null || mesh_filters.Length == 0) {
-      mesh_filters = new MeshFilter[6];
-    }
-    this.terrain_faces = new TerrainFace[6];
-
-    Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back};
-
-    //create radius of each vertex
-    for(int i = 0; i < vertex_radiuses.Length; i++) {
-       vertex_radiuses[i] = planet_options.min + (planet_options.max - planet_options.min) * Random.Range(0f, 1f);
-    }
-
-
-    for(int i = 0; i < 6; i++) {
-
-      if(mesh_filters[i] == null) {
-        GameObject meshobj = new GameObject("mesh");
-        meshobj.transform.parent = transform;
-
-        meshobj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
-        mesh_filters[i] = meshobj.AddComponent<MeshFilter>();
-        mesh_filters[i].mesh = new Mesh();
-
-      }
-        //terrain_faces[i] = new TerrainFace(mesh_filters[i].sharedMesh, res, directions[i], radius);
-        terrain_faces[i] = new TerrainFace(mesh_filters[i].sharedMesh, res, directions[i], planet_options);
-    }
-  }
-
-  void generateMesh() {
-    foreach( TerrainFace tf in terrain_faces) {
-      tf.constructMesh();
-    }
-  }
-
 
 
 }

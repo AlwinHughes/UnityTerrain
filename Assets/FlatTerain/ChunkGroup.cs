@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class ChunkGroup : MonoBehaviour {
 
+  [SerializeField]
+  private MeshFilter[] mesh_filters; 
+  Chunk[,] chunks;
+
+  private MeshFilter getMeshFilter(int i, int j) {
+    return mesh_filters[ (width + 1) * i + j];
+  }
+
+  private void setMeshFilter(int i, int j, MeshFilter fm) {
+    Debug.Log("setting " + i + " " + j + " | index: " + ((width+1) * i + j));
+    mesh_filters[ (width + 1) * i + j] = fm;
+  }
+
   //number of chunks
   [Range(0,9)]
   public int width = 1;
@@ -14,13 +27,14 @@ public class ChunkGroup : MonoBehaviour {
   [Range(2,100)]
   public int res = 10;
 
-  [SerializeField]
-  MeshFilter[,] mesh_filters;
-  Chunk[,] chunks;
-
-
   void OnValidate() {
     init();
+
+    for(int i = 0; i <= width; i++) {
+      for(int j = 0; j <= height; j++) {
+        generateChunk(i,j);
+      }
+    }
   }
 
   void init() {
@@ -29,14 +43,17 @@ public class ChunkGroup : MonoBehaviour {
       return;
     }
 
-
-    if(mesh_filters == null || mesh_filters.GetLength(0) == 0) {
-      Debug.Log("new mesh");
-      mesh_filters = new MeshFilter[width + 1, height+1];
+    if(mesh_filters == null || mesh_filters.Length == 0) {
+      Debug.Log("new mesh 1");
+      Debug.Log(mesh_filters == null);
+      mesh_filters = new MeshFilter[(width + 1) * (height+1)];
     }
 
-    if(mesh_filters.GetLength(0) != width + 1 || mesh_filters.GetLength(1) != height + 1) {
-      Debug.Log("new mesh");
+
+    
+    /*
+    if(mesh_filters.Length != width * height) {
+      Debug.Log("new mesh 2");
       MeshFilter[,] old_ms = mesh_filters.Clone() as MeshFilter[,]; 
       mesh_filters = new MeshFilter[width + 1, height+1];
 
@@ -50,13 +67,18 @@ public class ChunkGroup : MonoBehaviour {
             }
           }
       }
+      old_ms = null;
     }
+    */
+
+
+
 
     chunks = new Chunk[width +1, height + 1];
     for(int i = 0; i <= width; i++) {
       for(int j = 0; j <= height; j++) {
 
-        if(mesh_filters[i,j] == null) {
+        if(getMeshFilter(i,j) == null) {
           GameObject meshobj = new GameObject("mesh");
           meshobj.transform.parent = transform;
 
@@ -65,19 +87,17 @@ public class ChunkGroup : MonoBehaviour {
           meshobj.transform.position = pos;
 
           meshobj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
-          mesh_filters[i,j] = meshobj.AddComponent<MeshFilter>();
-          mesh_filters[i,j].mesh = new Mesh();
+          setMeshFilter(i,j, meshobj.AddComponent<MeshFilter>());
+          getMeshFilter(i,j).mesh = new Mesh();
+        } else {
+          Debug.Log("mesh already exists");
+          Debug.Log("skiped " + i + " " + j + " | index: " + ((width +1) * i + j));
         }
 
-        chunks[i,j] = new Chunk(mesh_filters[i,j].sharedMesh,i,j,res);
+        chunks[i,j] = new Chunk(getMeshFilter(i,j).sharedMesh,i,j,res);
       }
     }
 
-    for(int i = 0; i <= width; i++) {
-      for(int j = 0; j <= height; j++) {
-        generateChunk(i,j);
-      }
-    }
   }
 
 

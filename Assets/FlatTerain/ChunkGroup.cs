@@ -8,8 +8,18 @@ public class ChunkGroup : MonoBehaviour {
  // [SerializeField]
 //MFFlatArray mesh_filters;
 
-  Chunk[,] chunks;
+  [SerializeField]
+  Chunk[] chunks;
 
+  Chunk getChunk(int i, int j) {
+    return chunks[height * i + j];
+  }
+
+  void setChunk(int i, int j, Chunk c) {
+    chunks[height * i + j] = c;
+  }
+
+  /*
   [SerializeField]
   MeshFilter[] mesh_filters;
 
@@ -21,8 +31,24 @@ public class ChunkGroup : MonoBehaviour {
   void setMF(int i, int j, MeshFilter mf) {
     mesh_filters[height * i + j] = mf;
   }
+  
 
+  [SerializeField]
+  GameObject[] mesh_obj;
+
+  GameObject getMO(int i, int j) {
+    //Debug.Log("get "+  i + " " +j + " index: " + (width * i + j));
+    return mesh_obj[height * i + j];
+  }
+
+  void setMO(int i, int j, GameObject mf) {
+    mesh_obj[height * i + j] = mf;
+  }
+  */
+
+  [SerializeField]
   private int current_width;
+  [SerializeField]
   private int current_height;
 
   //number of chunks
@@ -54,12 +80,19 @@ public class ChunkGroup : MonoBehaviour {
     Debug.Log("current width " + current_width + " current height " + current_height);
     Debug.Log("width " + width + " height " + height);
 
-    if(mesh_filters == null || mesh_filters.Length == 0 || current_width != width || current_height != height) {
-      Debug.Log("re creating mesh");
-      mesh_filters = new MeshFilter[width * height];
-    }
+
+    if(chunks == null || chunks.Length == 0 ) {
+      Debug.Log("re creating chunks");
+      chunks = new Chunk[width * height];
+    } else if ( chunks != null && ( current_width != width || current_height != height)) {
+        Debug.Log("resizing mesh");
+        chunks = new Chunk[width * height];
+      }
+
+    
 
 
+    /*
     if(false && current_width != width || current_height != height) {
       Debug.Log("resizing mesh");
 
@@ -76,17 +109,23 @@ public class ChunkGroup : MonoBehaviour {
       current_width = width;
       current_height = height;
     }
+    */
 
-    chunks = new Chunk[width, height];
+    //chunks = new Chunk[width, height];
     for(int i = 0; i < width; i++) {
       for(int j = 0; j < height; j++) {
 
         //if(getMeshFilter(i,j) == null) {
-        if(getMF(i,j) == null){
+        //if(getMF(i,j) == null){
+
+          Vector3 pos = new Vector3(transform.position.x + i, transform.position.y, transform.position.z + j);
+
+          chunks[height * i + j] = new Chunk(i,j, res, transform);
+
+          /*
           GameObject meshobj = new GameObject("mesh");
           meshobj.transform.parent = transform;
 
-          Vector3 pos = new Vector3(meshobj.transform.position.x + i, meshobj.transform.position.y, meshobj.transform.position.z + j);
 
           meshobj.transform.position = pos;
 
@@ -101,9 +140,10 @@ public class ChunkGroup : MonoBehaviour {
 
           setMF(i,j, mf);
           //getMeshFilter(i,j).mesh = new Mesh();
-        } 
+          */
+        //} 
         //chunks[i,j] = new Chunk(getMeshFilter(i,j).sharedMesh,i,j,res);
-        chunks[i,j] = new Chunk(getMF(i,j).sharedMesh,i,j,res);
+        //chunks[i,j] = new Chunk(getMF(i,j).sharedMesh,i,j,res);
       }
     }
 
@@ -111,7 +151,7 @@ public class ChunkGroup : MonoBehaviour {
 
 
   private void generateChunk(int x, int y) {
-    chunks[x,y].constructMesh();
+    chunks[x * height + y].constructMesh();
   }
 
   /*public ChunkGroup(int width, int height, int res) {

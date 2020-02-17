@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chunk {
+public class Chunk : MonoBehaviour  {
 
   private int x;
   private int y;
@@ -13,6 +13,7 @@ public class Chunk {
   private Mesh mesh;
   //private MeshFilter mesh_filter;
   
+
 
   public GameObject mesh_obj;
 
@@ -25,6 +26,10 @@ public class Chunk {
     this.y = y;
     this.res = res;
     this.mesh = mesh;
+  }
+
+  void OnValidate() {
+    Debug.Log("on validate");
   }
 
   public void constructMesh() {
@@ -74,8 +79,5 @@ public class Chunk {
     noise_grid = new float[res,res];
     noise_grid = NoiseGrid.genNoise(res,res, 3f);
   }
-
-
-
 
 }

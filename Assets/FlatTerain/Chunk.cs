@@ -7,10 +7,7 @@ public class Chunk : MonoBehaviour {
 
   private int x;
   private int y;
-  [Range(2,100)]
-  public int res = 10;
   [Range(0f,10f)]
-  public float scale = 3f;
   private float old_scale = 3f;
 
   [SerializeField]
@@ -22,7 +19,9 @@ public class Chunk : MonoBehaviour {
   [SerializeField]
   public GameObject mesh_obj;
 
+  [SerializeField]
   public ChunkterainOptions terrain_options;
+  public bool terrain_option_foldout;
 
   private Vector3[] verts;
   private int[] triangles;
@@ -31,9 +30,10 @@ public class Chunk : MonoBehaviour {
     Debug.Log("constructor");
     this.x = x;
     this.y = y;
-    this.res = res;
     initMesh(t);
-    copyInToNoiseGrid(NoiseGrid.genNoise(res,res, scale));
+    terrain_options = new ChunkterainOptions(new float[]{3f}, new float[] {1f}, res);
+    copyInToGrid(NoiseGrid.genNoise(terrain_options), ref original_noise_grid);
+    resetNoiseGrid();
   }
 
   ~Chunk() {
@@ -61,53 +61,55 @@ public class Chunk : MonoBehaviour {
 
   void OnValidate() {
     Debug.Log("on validate");
-    if(res == null || res == 0) {
-      res = 10;
+
+    if(terrain_options == null) {
+      terrain_options = new ChunkterainOptions(new float[]{3f}, new float[] {1f}, 10);
     }
+
     if(mesh_obj == null) {
       initMesh(transform);
     }
-    if(noise_grid == null || noise_grid.Length == 0 || old_scale != scale) {
-      copyInToNoiseGrid(NoiseGrid.genNoise(res,res, scale));
-      old_scale = scale;
+
+    if(original_noise_grid == null) {
+      original_noise_grid = new float[terrain_options.res*terrain_options.res];
     }
 
-    
-    //transformNoiseGrid();
-    
+    onTerrainOptionsChange();
+  }
+
+  public void onTerrainOptionsChange() {
+    copyInToGrid(NoiseGrid.genNoise(terrain_options), ref original_noise_grid);
+    resetNoiseGrid();
     constructMesh();
   }
+
+
 
   public void constructMesh() {
 
     Debug.Log("construct mesh");
 
-    if(noise_grid.Length != res * res) {
-      copyInToNoiseGrid(NoiseGrid.genNoise(res,res, scale));
-    }
-
-    
-    verts = new Vector3[res*res];
-    triangles = new int[(res -1)*(res-1) *6];
+    verts = new Vector3[terrain_options.res * terrain_options.res];
+    triangles = new int[(terrain_options.res-1)*(terrain_options.res-1) *6];
 
     int tri_index = 0;
     int vert_index = 0;
 
-    float inv_res = 1f/(res-1);
-    for(int i = 0; i < res; i++) { 
-      for(int j = 0; j < res; j++) {
-        vert_index = i + res * j;
+    float inv_res = 1f/(terrain_options.res-1);
+    for(int i = 0; i < terrain_options.res; i++) { 
+      for(int j = 0; j < terrain_options.res; j++) {
+        vert_index = i + terrain_options.res * j;
 
         verts[vert_index] = new Vector3(i* inv_res, noise_grid[vert_index], j * inv_res);
 
-        if(i != res -1 && j != res -1) {
+        if(i != terrain_options.res -1 && j != terrain_options.res -1) {
 
           triangles[tri_index] = vert_index;
-          triangles[tri_index + 1] = vert_index + res;
-          triangles[tri_index + 2] = vert_index + res + 1;
+          triangles[tri_index + 1] = vert_index + terrain_options.res;
+          triangles[tri_index + 2] = vert_index + terrain_options.res + 1;
 
           triangles[tri_index + 3] = vert_index;
-          triangles[tri_index + 4] = vert_index + res + 1;
+          triangles[tri_index + 4] = vert_index + terrain_options.res + 1;
           triangles[tri_index + 5] = vert_index + 1;
 
           tri_index += 6;
@@ -123,21 +125,21 @@ public class Chunk : MonoBehaviour {
   }
 
   private void copyInToNoiseGrid(float[,] noise2d) {
-    noise_grid = new float[res*res];
-    for(int i = 0; i < res; i++) { 
-      for(int j = 0; j < res; j++) {
-        noise_grid[i + res * j] = noise2d[i,j];
+    noise_grid = new float[terrain_options.res*terrain_options.res];
+    for(int i = 0; i < terrain_options.res; i++) { 
+      for(int j = 0; j < terrain_options.res; j++) {
+        noise_grid[i + terrain_options.res * j] = noise2d[i,j];
       }
     }
   }
 
   private void copyInToGrid(float[,] noise2d, ref float[] grid) {
-    if(grid.Length != res*res) {
-      grid = new float[res * res];
+    if(grid.Length != terrain_options.res*terrain_options.res) {
+      grid = new float[terrain_options.res * terrain_options.res];
     }
-    for(int i = 0; i < res; i++) { 
-      for(int j = 0; j < res; j++) {
-        grid[i + res * j] = noise2d[i,j];
+    for(int i = 0; i < terrain_options.res; i++) { 
+      for(int j = 0; j < terrain_options.res; j++) {
+        grid[i + terrain_options.res * j] = noise2d[i,j];
       }
     }
   }
@@ -149,20 +151,22 @@ public class Chunk : MonoBehaviour {
 
   public void transformNoiseGrid() {
     Debug.Log("Transform");
-    float inv_res = 1f/(res-1);
+    float inv_res = 1f/(terrain_options.res-1);
 
     float max = getMax(noise_grid);
     float min= getMin(noise_grid);
 
     float mean = (max + min)/2f;
 
-    for(int i = 0; i < res; i++) {
-      for(int j = 0; j < res; j++) {
+    for(int i = 0; i < terrain_options.res; i++) {
+      for(int j = 0; j < terrain_options.res; j++) {
         float x = i*inv_res;
         float y = j*inv_res;
-        noise_grid[i + res * j] = 
-          mean * (float) Math.Pow( 1 - 16f * x * (1-x) * y * (1-y), 1) + 
-         /*noise contribution */ noise_grid[i + res * j] * ((float) Math.Sqrt(x*(1 - x)*y*(1 - y))) * 4f;
+
+        noise_grid[i + terrain_options.res * j] = 
+          //mean * (float) Math.Pow( 1 - 16f * x * (1-x) * y * (1-y), 1) + 
+         /*noise contribution */ noise_grid[i + terrain_options.res * j] * ((float) (x*(1 - x)*y*(1 - y))) * 16f;
+        
       }
     }
   }
@@ -186,5 +190,45 @@ public class Chunk : MonoBehaviour {
     }
     return max;
   }
+  /*
+public void updateVerts() {
+    Debug.Log("generate terrain");
+    
+    int vert_index = 0;
+    float inv_res = 1f/(terrain_options.res-1);
+    for(int i = 0; i < terrain_options.res; i++) { 
+      for(int j = 0; j < terrain_options.res; j++) {
+        vert_index = i + terrain_options.res * j;
 
+        verts[vert_index] = new Vector3(i* inv_res, noise_grid[vert_index], j * inv_res);
+      }
+    }
+  }
+
+  public void updateTriangles() {
+
+    int tri_index = 0;
+    int vert_index = 0;
+    for(int i = 0; i < terrain_options.res; i++) { 
+      for(int j = 0; j < terrain_options.res; j++) {
+        vert_index = i + terrain_options.res * j;
+
+
+        if(i != terrain_options.res -1 && j != terrain_options.res -1) {
+
+          triangles[tri_index] = vert_index;
+          triangles[tri_index + 1] = vert_index + terrain_options.res;
+          triangles[tri_index + 2] = vert_index + terrain_options.res + 1;
+
+          triangles[tri_index + 3] = vert_index;
+          triangles[tri_index + 4] = vert_index + terrain_options.res + 1;
+          triangles[tri_index + 5] = vert_index + 1;
+
+          tri_index += 6;
+        }
+
+      }
+
+  }
+  */
 }

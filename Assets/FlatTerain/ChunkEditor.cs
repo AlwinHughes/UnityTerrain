@@ -7,14 +7,27 @@ using UnityEditor;
 public class ChunkEditor : Editor {
 
   Chunk chunk;
-  Editor terrain_editor;
+  Editor noise_editor;
+  Editor[] generator_editors;
 
   public override void OnInspectorGUI() {
     DrawDefaultInspector();
+
     chunk = (Chunk) target;
 
-      DrawSettingsEditor(chunk.terrain_options, chunk.onTerrainOptionsChange, ref chunk.terrain_option_foldout, ref terrain_editor);
-    //DrawSettingsEditor(chunk.terrain_options, chunk.onTerrainOptionsChange, ref chunk.terrain_option_foldout, terrain_editor);
+    if(generator_editors == null || generator_editors.Length != chunk.generators.Length) {
+      generator_editors = new Editor[chunk.generators.Length];
+    }
+
+      DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
+
+      for(int i = 0; i < chunk.generators.Length; i++) {
+
+        if(chunk.generators[i].draw_editor) {
+          DrawSettingsEditor(chunk.generators[i].gen_opts, chunk.onTerrainOptionsChange, ref chunk.generators[i].fold_out, ref generator_editors[i]);
+        }
+
+      }
 
     
     if(GUILayout.Button("Transform")) {

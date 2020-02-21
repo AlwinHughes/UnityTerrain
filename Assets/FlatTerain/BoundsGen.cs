@@ -6,12 +6,12 @@ public class BoundsGen : TerrainGenerator {
 
   public BoundsGen(float floor, float ceiling) {
     this.gen_opts = new BoundsGenOpt(floor, ceiling);
-    this.draw_editor=true;
+    this.draw_editor = true;
   }
 
   public BoundsGen(BoundsGenOpt op) {
     this.gen_opts = op;
-    this.draw_editor=true;
+    this.draw_editor = true;
   }
 
   private BoundsGenOpt getGenOpts() {

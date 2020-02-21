@@ -12,8 +12,7 @@ public static class NoiseGrid {
 
     for(int i = 0; i < width; i++) {
       for(int j = 0; j < height; j++) {
-        noise_grid[i,j] = min + v_scale * (Mathf.PerlinNoise(i * scale / width, j * scale/height) + 1f) * 0.5f ;
-        //Debug.Log(noise_grid[i,j]);
+        noise_grid[i,j] = min + v_scale * (Mathf.PerlinNoise(i * scale / width, j * scale/height));
       }
     }
 
@@ -27,7 +26,7 @@ public static class NoiseGrid {
 
     for(int i = 0; i < res; i++) {
       for(int j = 0; j < res; j++) {
-        noise_grid[i,j] = amplitude * (Mathf.PerlinNoise(i * scale / res, j * scale/res) + 1f) * 0.5f ;
+        noise_grid[i,j] = amplitude * (Mathf.PerlinNoise(i * scale / res, j * scale/res) ) ;
         //Debug.Log(noise_grid[i,j]);
       }
     }
@@ -39,7 +38,7 @@ public static class NoiseGrid {
 
   public static float[,] genNoise(NoiseOptions no) {
     Debug.Log("NoiseOptions| a: " + no.amplitude + " s: " + no.scale);
-    return genNoise(no.res, no.res, no.amplitude, 0f, no.scale);
+    return genNoise(no.res, no.amplitude, no.scale);
   }
 
   public static float[,] genNoise(int width, int height, float scale) {

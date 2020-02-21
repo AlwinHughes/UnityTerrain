@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class TerrainGenerator {
@@ -8,6 +9,8 @@ public abstract class TerrainGenerator {
   public ScriptableObject gen_opts;
   public bool fold_out = true;
   public bool draw_editor = false;
+
+  public Editor editor;
 
 
   protected float[,] noise_grid;

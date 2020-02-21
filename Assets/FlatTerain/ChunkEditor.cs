@@ -8,28 +8,23 @@ public class ChunkEditor : Editor {
 
   Chunk chunk;
   Editor noise_editor;
-  Editor[] generator_editors;
 
   public override void OnInspectorGUI() {
     DrawDefaultInspector();
 
     chunk = (Chunk) target;
 
-    if(generator_editors == null || generator_editors.Length != chunk.generators.Length) {
-      generator_editors = new Editor[chunk.generators.Length];
-    }
+    DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
 
-      DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
+    for(int i = 0; i < chunk.generators.Length; i++) {
 
-      for(int i = 0; i < chunk.generators.Length; i++) {
-
-        if(chunk.generators[i].draw_editor) {
-          DrawSettingsEditor(chunk.generators[i].gen_opts, chunk.onTerrainOptionsChange, ref chunk.generators[i].fold_out, ref generator_editors[i]);
-        }
-
+      if(chunk.generators[i].draw_editor) {
+        DrawSettingsEditor(chunk.generators[i].gen_opts, chunk.onTerrainOptionsChange, ref chunk.generators[i].fold_out, ref chunk.generators[i].editor);
       }
 
-    
+    }
+
+
     if(GUILayout.Button("Transform")) {
       chunk.transformNoiseGrid();
       chunk.constructMesh();

@@ -41,7 +41,7 @@ public class RidgeGenerator : TerrainGenerator {
     if(getGenOpts().enabled) {
       for(int i = 0; i < noise_grid.GetLength(0); i++) {
         for(int j = 0; j < noise_grid.GetLength(1); j++) {
-          //existing_noise[i + noise_grid.GetLength(0) * j] = noise_grid[i,j];
+          //existing_noise[i + noise_grid.GetLength(0) * j] += noise_grid[i,j];
           existing_noise[i + noise_grid.GetLength(0) * j] = (noise_grid[i,j] +1)* existing_noise[i + noise_grid.GetLength(0) * j];
         }
       }

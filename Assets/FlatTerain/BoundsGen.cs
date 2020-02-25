@@ -21,11 +21,13 @@ public class BoundsGen : TerrainGenerator {
 
   public override void applyTerrain(ref float[] existing_noise) {
 
-    for(int i = 0; i < existing_noise.Length; i++) {
-      if(existing_noise[i] < getGenOpts().floor) {
-        existing_noise[i] = getGenOpts().floor;
-      } else if (existing_noise[i] > getGenOpts().ceiling) {
-        existing_noise[i] = getGenOpts().ceiling;
+    if(getGenOpts().enabled) {
+      for(int i = 0; i < existing_noise.Length; i++) {
+        if(existing_noise[i] < getGenOpts().floor) {
+          existing_noise[i] = getGenOpts().floor;
+        } else if (existing_noise[i] > getGenOpts().ceiling) {
+          existing_noise[i] = getGenOpts().ceiling;
+        }
       }
     }
 

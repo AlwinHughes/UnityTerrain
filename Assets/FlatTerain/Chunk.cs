@@ -90,7 +90,7 @@ public class Chunk : MonoBehaviour {
 
     if(generators == null || generators.Length == 0) 
       //generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new RidgeGenerator(2f, 2f), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f)}; good nice looking thing
-      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 0.5f, 3), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f)};
+      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6),  new GeomRidgeGen(1f, 2f, 0.5f, 1f, 1), new YTransformGen(false)};
     //generators = new TerrainGenerator[] { new RidgeGenerator(2f)}; }
 
     onTerrainOptionsChange();

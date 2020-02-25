@@ -13,8 +13,8 @@ public class GeomRidgeGen : TerrainGenerator {
     return (GeomRidgeGenOpt ) this.gen_opts;
   }
 
-  public GeomRidgeGen(float power, float scale_ratio, float amplitude_ratio, int num_octaves) {
-    this.gen_opts = new GeomRidgeGenOpt(power, scale_ratio, amplitude_ratio, num_octaves);
+  public GeomRidgeGen(float power, float scale_ratio, float scale, float amplitude_ratio, int num_octaves) {
+    this.gen_opts = new GeomRidgeGenOpt(power, scale_ratio, scale, amplitude_ratio, num_octaves);
     this.draw_editor = true;
   }
 
@@ -22,20 +22,51 @@ public class GeomRidgeGen : TerrainGenerator {
 
     NoiseOptions o = new NoiseOptions(options);
     o.amplitude = 1f;
-    //o.scale = getGenOpts().scale;
+    o.scale = getGenOpts().scale;
+
+    float[,] new_noise = new float[o.res, o.res];
+
+    
+    noise_grid = new float[o.res, o.res];
+    /*
+    for(int i = 0; i < o.res; i++) {
+      for(int j = 0; j < o.res; j++) {
+        noise_grid[i,j] = 0;
+      }
+    }
+    */
 
 
     for(int k = 0; k < getGenOpts().num_octaves; k++) {
-      noise_grid = NoiseGrid.genNoise(o);
+      new_noise = NoiseGrid.genNoise(o);
+      
       //make ridges
       for(int i = 0; i < o.res; i++) {
         for(int j = 0; j < o.res; j++) {
-          noise_grid[i,j] = Mathf.Pow(0.5f - Mathf.Abs(0.5f - noise_grid[i,j]), getGenOpts().power);
+
+          //noise_grid[i,j] = 0.5f + 0.5f*Mathf.Pow(1f - 2f *o.amplitude* Mathf.Abs(0.5f*o.amplitude - noise_grid[i,j]), getGenOpts().power);
+          
+          //noise_grid[i,j] +=  Mathf.Abs(noise_grid[i,j] - 0.5f * o.amplitude);
+          
+          noise_grid[i,j] += Mathf.Pow(o.amplitude - Mathf.Abs(new_noise[i,j] - 0.5f * o.amplitude), getGenOpts().power);
+          
         }
       }
-      o.scale *= getGenOpts().scale_ratio;
-      o.amplitude *= getGenOpts().amplitude_ratio;
+      o.scale += getGenOpts().scale_ratio; o.amplitude *= getGenOpts().amplitude_ratio;
     }
+
+
+    float max = getMax(noise_grid);
+    float min = getMin(noise_grid);
+
+    for(int i = 0; i < o.res; i++) {
+      for(int j = 0; j < o.res; j++) {
+        noise_grid[i,j] = (noise_grid[i,j] - min) / max + 1f;
+      }
+    }
+
+    Debug.Log("Max: " + getMax(noise_grid));
+    Debug.Log("Min: " + getMin(noise_grid));
   }
 
 
@@ -44,8 +75,8 @@ public class GeomRidgeGen : TerrainGenerator {
     if(getGenOpts().enabled) {
       for(int i = 0; i < noise_grid.GetLength(0); i++) {
         for(int j = 0; j < noise_grid.GetLength(1); j++) {
-          //existing_noise[i + noise_grid.GetLength(0) * j] = noise_grid[i,j];
-          existing_noise[i + noise_grid.GetLength(0) * j] = (noise_grid[i,j] +1)* existing_noise[i + noise_grid.GetLength(0) * j];
+          existing_noise[i + noise_grid.GetLength(0) * j] *= noise_grid[i,j];
+          //existing_noise[i + noise_grid.GetLength(0) * j] = (noise_grid[i,j] +1)* existing_noise[i + noise_grid.GetLength(0) * j];
         }
       }
     }

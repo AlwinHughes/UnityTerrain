@@ -19,23 +19,29 @@ public class SmoothGeometric : TerrainGenerator {
 
   override public void generateTerrain(NoiseOptions options) {
 
-    noise_grid = new float[options.res, options.res];
+    if(getGenOpts().enabled) {
 
-    NoiseOptions o = new NoiseOptions(options);
+      noise_grid = new float[options.res, options.res];
 
-    for(int i = 0; i < getGenOpts().num_octaves; i++) {
-      noise_grid = add2DArr(noise_grid, NoiseGrid.genNoise(o));
-      o.scale *= getGenOpts().scale_ratio;
-      o.amplitude *= getGenOpts().amplitude_ratio;
+      NoiseOptions o = new NoiseOptions(options);
+
+      for(int i = 0; i < getGenOpts().num_octaves; i++) {
+        noise_grid = add2DArr(noise_grid, NoiseGrid.genNoise(o));
+        o.scale *= getGenOpts().scale_ratio;
+        o.amplitude *= getGenOpts().amplitude_ratio;
+      }
     }
   }
 
   public override void applyTerrain(ref float[] existing_noise) {
-    for(int i = 0; i < noise_grid.GetLength(0); i++) {
-      for(int j = 0; j < noise_grid.GetLength(1); j++) {
-        existing_noise[i + noise_grid.GetLength(0) * j] += noise_grid[i,j];
+
+    if(getGenOpts().enabled) {
+      for(int i = 0; i < noise_grid.GetLength(0); i++) {
+        for(int j = 0; j < noise_grid.GetLength(1); j++) {
+          existing_noise[i + noise_grid.GetLength(0) * j] += noise_grid[i,j];
 
 
+        }
       }
     }
   }

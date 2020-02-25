@@ -11,6 +11,8 @@ public class SmoothGeomTerrainGenOpt : ScriptableObject {
   [Range(0, 10)]
   public int num_octaves = 3;
 
+  public bool enabled = true;
+
   public SmoothGeomTerrainGenOpt(float a, float s, int n) {
     amplitude_ratio = a;
     scale_ratio = s;

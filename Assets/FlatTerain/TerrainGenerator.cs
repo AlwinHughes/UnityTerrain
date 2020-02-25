@@ -65,5 +65,28 @@ public abstract class TerrainGenerator {
     return s;
   }
 
+  protected float getMax(float[,] arr) {
+    float max = arr[0,0];
+    for(int i = 1; i < arr.GetLength(0); i++) {
+      for(int j = 1; j < arr.GetLength(1); j++) {
+        if(arr[i,j] > max) {
+          max = arr[i,j];
+        }
+      }
+    }
+    return max;
+  }
+
+  protected float getMin(float[,] arr) {
+    float min = arr[0,0];
+    for(int i = 1; i < arr.GetLength(0); i++) {
+      for(int j = 1; j < arr.GetLength(1); j++) {
+        if(arr[i,j] < min) {
+          min = arr[i,j];
+        }
+      }
+    }
+    return min;
+  }
 
 }

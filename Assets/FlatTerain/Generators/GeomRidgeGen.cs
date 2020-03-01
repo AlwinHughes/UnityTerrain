@@ -11,11 +11,10 @@ public class GeomRidgeGen : TerrainGenerator {
   }
 
   private GeomRidgeGenOpt getGenOpts() {
-    return (GeomRidgeGenOpt ) this.gen_opts;
-  }
+    return (GeomRidgeGenOpt ) this.gen_opts; }
 
-  public GeomRidgeGen(float power, float scale_ratio, float scale, float amplitude_ratio, int num_octaves) {
-    this.gen_opts = new GeomRidgeGenOpt(power, scale_ratio, scale, amplitude_ratio, num_octaves);
+  public GeomRidgeGen(float power, float scale_ratio, float scale, float amplitude_ratio, int num_octaves, bool multiply) {
+    this.gen_opts = new GeomRidgeGenOpt(power, scale_ratio, scale, amplitude_ratio, num_octaves, multiply);
     this.draw_editor = true;
     this.gen_type = GeneratorType.GeomRidge;
   }
@@ -85,10 +84,17 @@ public class GeomRidgeGen : TerrainGenerator {
   public override void applyTerrain(ref float[] existing_noise) {
 
     if(getGenOpts().enabled) {
-      for(int i = 0; i < noise_store.getWidth(); i++) {
-        for(int j = 0; j < noise_store.getHeight(); j++) {
-          existing_noise[i + noise_store.getHeight() * j] *= noise_store.get(i,j);
-          //existing_noise[i + noise_grid.GetLength(0) * j] = (noise_grid[i,j] +1)* existing_noise[i + noise_grid.GetLength(0) * j];
+      if(getGenOpts().multiply) {
+        for(int i = 0; i < noise_store.getWidth(); i++) {
+          for(int j = 0; j < noise_store.getHeight(); j++) {
+            existing_noise[i + noise_store.getHeight() * j] *= noise_store.get(i,j);
+          }
+        }
+      } else {
+        for(int i = 0; i < noise_store.getWidth(); i++) {
+          for(int j = 0; j < noise_store.getHeight(); j++) {
+            existing_noise[i + noise_store.getHeight() * j] += noise_store.get(i,j);
+          }
         }
       }
     }

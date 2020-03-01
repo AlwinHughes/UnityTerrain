@@ -75,16 +75,18 @@ public class Chunk : MonoBehaviour {
     }
 
     if(noise_options == null) {
-      noise_options = new NoiseOptions(0.7f, 10, 1f);
+      noise_options = new NoiseOptions(0.7f, 50, 1f);
     } 
-    //generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new RidgeGenerator(2f, 2f), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f)}; good nice looking thing
 
 
 
     if(generators == null || generators.Length == 0) {
+      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f)}; //good nice looking thing
       Debug.Log("resetting generators");
+      /*
       generators = new TerrainGenerator[1];
       generators[0] = new SmoothGeometric(0.5f, 2f, 3);
+      */
     } else {
       for(int i = 0; i < generators.Length; i++) {
         generators[i] = GeneratorCaster.castTG(generators[i]);

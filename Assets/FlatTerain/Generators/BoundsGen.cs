@@ -7,11 +7,20 @@ public class BoundsGen : TerrainGenerator {
   public BoundsGen(float floor, float ceiling) {
     this.gen_opts = new BoundsGenOpt(floor, ceiling);
     this.draw_editor = true;
+    this.gen_type = GeneratorType.Bounds;
   }
 
   public BoundsGen(BoundsGenOpt op) {
     this.gen_opts = op;
     this.draw_editor = true;
+    this.gen_type = GeneratorType.Bounds;
+  }
+
+  public BoundsGen(TerrainGenerator tg) {
+    this.gen_opts = (BoundsGenOpt) tg.gen_opts;
+    this.draw_editor = true;
+    this.gen_type = GeneratorType.Bounds;
+    this.noise_store = tg.noise_store;
   }
 
   private BoundsGenOpt getGenOpts() {

@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System;
 
 public class NoiseOptions : ScriptableObject {
 
-  [Range(0f, 30f)]
+  [Range(0f, 10f)]
   public float scale;
-  [Range(1, 200)]
+  [Range(2, 200)]
   public int res;
   [Range(0f, 20f)]
   public float amplitude;

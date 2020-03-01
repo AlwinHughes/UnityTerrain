@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Normalise : TerrainGenerator {
 
+  public Normalise() {
+    this.gen_type = GeneratorType.Normalise;
+  }
+
+  public Normalise(TerrainGenerator tg) {
+    this.gen_type = GeneratorType.Normalise;
+    this.noise_store = tg.noise_store;
+  }
+
   public override void applyTerrain(ref float[] existing_terain) {
     Debug.Log("normalise apply terrain");
 

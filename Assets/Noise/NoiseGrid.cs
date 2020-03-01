@@ -35,9 +35,8 @@ public static class NoiseGrid {
   }
 
 
-
   public static float[,] genNoise(NoiseOptions no) {
-    Debug.Log("NoiseOptions| a: " + no.amplitude + " s: " + no.scale);
+    //Debug.Log("NoiseOptions| a: " + no.amplitude + " s: " + no.scale);
     return genNoise(no.res, no.amplitude, no.scale);
   }
 

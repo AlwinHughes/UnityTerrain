@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System;
 
-public abstract class TerrainGenerator {
+[Serializable]
+public class TerrainGenerator {
 
   //editor stuff
   public ScriptableObject gen_opts;
@@ -12,21 +14,33 @@ public abstract class TerrainGenerator {
 
   public Editor editor;
 
+  public GeneratorType gen_type;
 
-  protected float[,] noise_grid;
+  public NoiseStore noise_store;
 
-  public virtual void generateTerrain(NoiseOptions options) { }
+  public TerrainGenerator(int r) {
+    noise_store = new NoiseStore(r,r);
+  }
+
+  public TerrainGenerator() { }
+
+  //protected float[,] noise_grid;
+
+  public virtual void generateTerrain(NoiseOptions options) {
+    Debug.Log("making noise store");
+    noise_store = new NoiseStore(options.res,options.res);
+  }
 
   public virtual void applyTerrain(ref float[] existing_noise) {
     //default behaviour is to add new noise to old noise
+    Debug.Log("default apply");
 
-    for(int i = 0; i < noise_grid.GetLength(0); i++) {
-      for(int j = 0; j < noise_grid.GetLength(1); j++) {
-        existing_noise[i + noise_grid.GetLength(0) * j] += noise_grid[i,j];
+    for(int i = 0; i < noise_store.getWidth(); i++) {
+      for(int j = 0; j < noise_store.getHeight(); j++) {
+        existing_noise[i + noise_store.getWidth() * j] += noise_store.get(i,j);
       }
     }
   }
-
   protected float[,] add2DArr(float[,] a1, float[,] a2) {
 
     for(int i = 0; i < a1.GetLength(0); i++) {

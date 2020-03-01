@@ -10,8 +10,18 @@ public class YTransformGen : TerrainGenerator {
 
   public YTransformGen(bool take_average) {
     this.take_average = take_average;
+    this.gen_type = GeneratorType.YTransform;
   }
 
+  public YTransformGen(TerrainGenerator tg) {
+    this.take_average = false;
+    this.gen_type = GeneratorType.YTransform;
+    this.noise_store = tg.noise_store;
+  }
+
+  public override void generateTerrain(NoiseOptions o) {
+    //do nothing to avoid creating a noise store
+  }
 
   public override void applyTerrain(ref float[] existing_noise) {
     float subtract = 0;

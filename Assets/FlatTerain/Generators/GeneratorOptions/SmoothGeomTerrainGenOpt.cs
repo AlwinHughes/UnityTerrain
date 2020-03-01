@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class SmoothGeomTerrainGenOpt : ScriptableObject {
 
-  [Range(0f, 5f)]
+  [Range(0f, 1f)]
   public float amplitude_ratio;
   [Range(0f, 5f)]
   public float scale_ratio;

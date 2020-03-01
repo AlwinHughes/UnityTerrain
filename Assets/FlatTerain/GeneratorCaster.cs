@@ -17,6 +17,8 @@ public static class GeneratorCaster {
       return new SmoothGeometric(tg);
     } else if (tg.gen_type == GeneratorType.YTransform) {
       return new YTransformGen(tg);
+    } else if (tg.gen_type == GeneratorType.MultiplyConform) {
+      return new MultiplyConform(tg);
     } else {
       return tg;
     }

@@ -18,5 +18,14 @@ public static class NoiseLine {
     return line;
   }
 
+  public static float[] getNoiseLine(float scale, int length) {
+    float[] line = new float[length];
+
+    for(int i = 0; i < length; i++) {
+    line[i] = Mathf.PerlinNoise(scale * i/length, 1.2f) - 0.5f;
+    }
+
+    return line;
+  }
 
 }

@@ -7,5 +7,6 @@ public enum GeneratorType {
   Normalise,
   Ridge,
   SmoothGeometric,
-  YTransform
+  YTransform,
+  MultiplyConform
 }

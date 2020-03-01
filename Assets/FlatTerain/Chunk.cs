@@ -7,7 +7,6 @@ public class Chunk : MonoBehaviour {
   private int x;
   private int y;
   [Range(0f,10f)]
-  private float old_scale = 3f;
 
   [SerializeField]
   private float[] noise_grid;
@@ -76,12 +75,10 @@ public class Chunk : MonoBehaviour {
 
     if(noise_options == null) {
       noise_options = new NoiseOptions(0.7f, 50, 1f);
-    } 
-
-
+    }
 
     if(generators == null || generators.Length == 0) {
-      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f)}; //good nice looking thing
+      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f), new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease1)}; //good nice looking thing
       Debug.Log("resetting generators");
       /*
       generators = new TerrainGenerator[1];

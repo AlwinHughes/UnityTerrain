@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
+[Serializable]
 public class Chunk : MonoBehaviour {
 
   private int x;
@@ -20,7 +21,6 @@ public class Chunk : MonoBehaviour {
   public GameObject mesh_obj;
 
   [SerializeField]
-  public ChunkterainOptions terrain_options;
   public bool noise_option_foldout;
   public bool generator_foldout;
 
@@ -30,16 +30,30 @@ public class Chunk : MonoBehaviour {
   //[SerializeField]
   public TerrainGenerator[] generators;
 
-  public Chunk(int x, int y, int res, Transform t) { Debug.Log("constructor");
+  public Chunk(int x, int y, int res, Transform t) {
+    Debug.Log("constructor");
     this.x = x;
     this.y = y;
     initMesh(t);
-    //terrain_options = new ChunkterainOptions(new float[]{3f}, new float[] {1f}, res);
-    //copyInToGrid(NoiseGrid.genNoise(terrain_options), ref original_noise_grid);
+    noise_options = new NoiseOptions(0.7f, 50, 1f);
+
+    original_noise_grid = new float[noise_options.res*noise_options.res];
+
     resetNoiseGrid();
     generators = new TerrainGenerator[] {new SmoothGeometric(2f, 0.5f, 3) };
-    noise_options = new NoiseOptions(3f, res, 1f);
+    noise_options = new NoiseOptions(0.5f, res, 1f);
+
+    generateTerrainIfNotReady();
+    applyTerrain();
+    constructMesh();
   }
+
+  public void setPos(int x, int y) {
+    Vector3 pos = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + y);
+    mesh_obj.transform.position = pos;
+  }
+
+
 
   ~Chunk() {
     Debug.Log("destroying mesh");
@@ -255,44 +269,3 @@ public class Chunk : MonoBehaviour {
     return max;
   }
 }
-/*
-   public void updateVerts() {
-   Debug.Log("generate terrain");
-
-   int vert_index = 0;
-   float inv_res = 1f/(terrain_options.res-1);
-   for(int i = 0; i < terrain_options.res; i++) { 
-   for(int j = 0; j < terrain_options.res; j++) {
-   vert_index = i + terrain_options.res * j;
-
-   verts[vert_index] = new Vector3(i* inv_res, noise_grid[vert_index], j * inv_res);
-   }
-   }
-   }
-
-   public void updateTriangles() {
-
-   int tri_index = 0;
-   int vert_index = 0;
-   for(int i = 0; i < terrain_options.res; i++) { 
-   for(int j = 0; j < terrain_options.res; j++) {
-   vert_index = i + terrain_options.res * j;
-
-
-   if(i != terrain_options.res -1 && j != terrain_options.res -1) {
-
-   triangles[tri_index] = vert_index;
-   triangles[tri_index + 1] = vert_index + terrain_options.res;
-   triangles[tri_index + 2] = vert_index + terrain_options.res + 1;
-
-   triangles[tri_index + 3] = vert_index;
-   triangles[tri_index + 4] = vert_index + terrain_options.res + 1;
-   triangles[tri_index + 5] = vert_index + 1;
-
-   tri_index += 6;
-   }
-
-   }
-
-   }
-   */

@@ -18,7 +18,11 @@ public static class GeneratorCaster {
     } else if (tg.gen_type == GeneratorType.YTransform) {
       return new YTransformGen(tg);
     } else if (tg.gen_type == GeneratorType.MultiplyConform) {
+      Debug.Log("got multiply conform");
       return new MultiplyConform(tg);
+    } else if (tg.gen_type == GeneratorType.AddConform) {
+      Debug.Log("got add conform");
+      return new AddConform(tg);
     } else {
       return tg;
     }

@@ -7,6 +7,9 @@ public class MultiplyConform : TerrainGenerator {
   private int width;
   private int height;
 
+  public int s_test = 2;
+
+
   public MultiplyConform(MultiplyConformOpt lco) {
     this.gen_opts = lco;
     this.draw_editor = true;
@@ -14,12 +17,14 @@ public class MultiplyConform : TerrainGenerator {
   }
 
   public MultiplyConform(float[] fixed_points, Edge e, Slope s) {
-    this.gen_opts = new MultiplyConformOpt(e, fixed_points, s);
+    this.gen_opts = new MultiplyConformOpt(fixed_points, e, s);
     this.gen_type = GeneratorType.MultiplyConform;
     this.draw_editor = true;
+    Debug.Log("is mul conf opt: " + this.gen_opts.GetType());
   }
 
   public MultiplyConform(TerrainGenerator tg) {
+    Debug.Log("is mul conf opt: " + tg.gen_opts.GetType());
     this.gen_opts = (MultiplyConformOpt) tg.gen_opts;
     this.noise_store = tg.noise_store;
     this.gen_type = GeneratorType.MultiplyConform;

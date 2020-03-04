@@ -78,9 +78,12 @@ public class Chunk : MonoBehaviour {
     }
 
     if(generators == null || generators.Length == 0) {
-      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f), new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease1)}; //good nice looking thing
+      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f), new AddConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top), new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease2) }; //good nice looking thing
       Debug.Log("resetting generators");
+
       /*
+       * new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease1)
+       *
       generators = new TerrainGenerator[1];
       generators[0] = new SmoothGeometric(0.5f, 2f, 3);
       */
@@ -96,7 +99,6 @@ public class Chunk : MonoBehaviour {
     if(mesh_filter.sharedMesh.vertices.Length == 0) {
       Debug.Log("mesh null");
     }
-
 
 
     Debug.Log("doing something");

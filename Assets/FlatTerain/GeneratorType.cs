@@ -9,5 +9,7 @@ public enum GeneratorType {
   SmoothGeometric,
   YTransform,
   MultiplyConform,
-  AddConform
+  AddConform,
+  SmoothStretch,
+  RidgeStretch
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public static class GeneratorCaster {
 
   public static TerrainGenerator castTG(TerrainGenerator tg) {
+    Debug.Log("castTG");
     if (tg.gen_type == GeneratorType.Bounds) {
       return new BoundsGen(tg);
     } else if (tg.gen_type == GeneratorType.GeomRidge) {
@@ -21,6 +22,10 @@ public static class GeneratorCaster {
       return new MultiplyConform(tg);
     } else if (tg.gen_type == GeneratorType.AddConform) {
       return new AddConform(tg);
+    } else if(tg.gen_type == GeneratorType.SmoothStretch) {
+      return new SmoothStretchGen(tg);
+    } else if(tg.gen_type == GeneratorType.RidgeStretch) {
+      return new SmoothStretchGen(tg);
     } else {
       return tg;
     }
@@ -43,8 +48,15 @@ public static class GeneratorCaster {
       return new MultiplyConform(opt as MultiplyConformOpt);
     } else if (type == GeneratorType.AddConform) {
       return new AddConform(opt as AddConformOpt);
+    } else if (type == GeneratorType.SmoothStretch) {
+      return new SmoothStretchGen(opt as SmoothStrechOpt);
+    } else if (type == GeneratorType.RidgeStretch) {
+      return new RidgeStretchGen(opt as RidgeStretchOpt);
     } 
+
+
     Debug.Log("something has gone very wrong");
+    throw new System.Exception("unknown generator type");
     return null;
   }
 }

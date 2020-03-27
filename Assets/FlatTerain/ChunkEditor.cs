@@ -16,6 +16,12 @@ public class ChunkEditor : Editor {
 
     DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
 
+
+    for(int i = 0; i < chunk.tgopt.options.Length; i++) {
+      DrawSettingsEditor(chunk.tgopt.options[i], chunk.onTerrainOptionsChange, ref chunk.tgopt.foldouts[i], ref chunk.tgopt.editors[i]);
+    }
+
+    /*
     for(int i = 0; i < chunk.generators.Length; i++) {
 
       if(chunk.generators[i].draw_editor) {
@@ -23,6 +29,7 @@ public class ChunkEditor : Editor {
       }
 
     }
+    */
 
 
     if(GUILayout.Button("Transform")) {

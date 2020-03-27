@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[CreateAssetMenu()]
 [Serializable]
 public class RidgeGenOpt : ScriptableObject {
 

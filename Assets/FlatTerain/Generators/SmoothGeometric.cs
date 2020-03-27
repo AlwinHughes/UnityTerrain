@@ -6,17 +6,17 @@ using UnityEngine;
 public class SmoothGeometric : TerrainGenerator {
 
   public SmoothGeometric(float amplitude_ratio, float scale_ratio, int num_octaves) {
-    this.gen_opts = new SmoothGeomTerrainGenOpt(amplitude_ratio, scale_ratio, num_octaves);
+    this.gen_opts = new SmoothGeomOpt(amplitude_ratio, scale_ratio, num_octaves);
     this.draw_editor = true;
     this.gen_type = GeneratorType.SmoothGeometric;
   }
 
 
-  private SmoothGeomTerrainGenOpt getGenOpts() {
-    return (SmoothGeomTerrainGenOpt) this.gen_opts;
+  private SmoothGeomOpt getGenOpts() {
+    return (SmoothGeomOpt) this.gen_opts;
   }
 
-  public SmoothGeometric(SmoothGeomTerrainGenOpt go){
+  public SmoothGeometric(SmoothGeomOpt go){
     this.gen_opts = go;
     this.gen_type = GeneratorType.SmoothGeometric;
   }
@@ -24,7 +24,7 @@ public class SmoothGeometric : TerrainGenerator {
   public SmoothGeometric(TerrainGenerator tg) {
     this.draw_editor = true;
     this.gen_type = GeneratorType.SmoothGeometric;
-    this.gen_opts = (SmoothGeomTerrainGenOpt) tg.gen_opts;
+    this.gen_opts = (SmoothGeomOpt) tg.gen_opts;
     this.noise_store = tg.noise_store;
   }
 

@@ -27,6 +27,9 @@ public class Chunk : MonoBehaviour {
   private Vector3[] verts;
   private int[] triangles;
 
+  public TGopt tgopt;
+
+
   //[SerializeField]
   public TerrainGenerator[] generators;
 
@@ -47,13 +50,6 @@ public class Chunk : MonoBehaviour {
     applyTerrain();
     constructMesh();
   }
-
-  public void setPos(int x, int y) {
-    Vector3 pos = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + y);
-    mesh_obj.transform.position = pos;
-  }
-
-
 
   ~Chunk() {
     Debug.Log("destroying mesh");
@@ -79,6 +75,24 @@ public class Chunk : MonoBehaviour {
     this.transform.position = pos;
   }
 
+  public void init(Vector3 pos, NoiseOptions noise_options, TerrainGenerator[] tgs) {
+    Debug.Log("chunk init");
+    this.transform.position = pos;
+
+    this.noise_options = noise_options;
+
+    if(this.generators == null) {
+      this.generators = tgs;
+    }
+
+    Debug.Log("chunk init2");
+    original_noise_grid = new float[noise_options.res*noise_options.res];
+    Debug.Log("chunk init3");
+    generateTerrain();
+    applyTerrain();
+    constructMesh();
+  }
+
   void OnValidate() {
     Debug.Log("on validate");
 
@@ -92,19 +106,29 @@ public class Chunk : MonoBehaviour {
     }
 
     if(generators == null || generators.Length == 0) {
-      generators = new TerrainGenerator[] {new SmoothGeometric(0.2f, 5f, 6), new GeomRidgeGen(2f, 2f, 1f, 0.5f, 3, true), new YTransformGen(false), new BoundsGen(-0.5f, 0.5f), new AddConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top), new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease2) }; //good nice looking thing
-      Debug.Log("resetting generators");
+
+      Debug.Log("making generators from tgopts");
+
+      generators = new TerrainGenerator[tgopt.options.Length];
+
+      for(int i = 0; i < tgopt.options.Length; i++) {
+        generators[i] = GeneratorCaster.makeTG(tgopt.options[i],tgopt.types[i]);
+      }
+
+
+    } else {
+      //todo later: make this better so it doesn't always re create the generators
+
+      generators = new TerrainGenerator[tgopt.options.Length];
+      for(int i = 0; i < tgopt.options.Length; i++) {
+        generators[i] = GeneratorCaster.makeTG(tgopt.options[i],tgopt.types[i]);
+      }
 
       /*
-       * new MultiplyConform(NoiseLine.getNoiseLine(4.4f, 50), Edge.Top, Slope.Ease1)
-       *
-      generators = new TerrainGenerator[1];
-      generators[0] = new SmoothGeometric(0.5f, 2f, 3);
-      */
-    } else {
       for(int i = 0; i < generators.Length; i++) {
         generators[i] = GeneratorCaster.castTG(generators[i]);
       }
+      */
     }
 
 
@@ -122,7 +146,27 @@ public class Chunk : MonoBehaviour {
     constructMesh();
   }
 
+  public void createGenerators() {
+
+
+    for(int i = 0; i < generators.Length; i++) {
+      generators[i] = GeneratorCaster.castTG(generators[i]);
+    }
+  }
+
+  public void onNoiseOptionsChanged() {
+    if(noise_options.res > 1) {
+      original_noise_grid = new float[noise_options.res*noise_options.res];
+      generateTerrain();
+      applyTerrain();
+      constructMesh();
+    } else {
+      Debug.Log("ignoring as res is 0 or 1");
+    }
+  }
+
   public void onTerrainOptionsChange() {
+    Debug.Log("on terraain options changed");
     if(noise_options.res > 1) {
       original_noise_grid = new float[noise_options.res*noise_options.res];
       generateTerrain();

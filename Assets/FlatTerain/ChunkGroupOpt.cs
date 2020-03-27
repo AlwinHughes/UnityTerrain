@@ -5,17 +5,22 @@ using UnityEngine;
 public class ChunkGroupOpt : ScriptableObject {
 
   [Range(0,10)]
-  public int height;
+  public int length;
   [Range(0,10)]
   public int width;
 
-  [Range(2,200)]
-  public int res;
+  [Range(0f,10f)]
+  public float side_length;
 
-  public ChunkGroupOpt(int height, int width, int res) {
-    this.height = height;
+  [Range(0f,10f)]
+  public float side_width;
+
+
+  public ChunkGroupOpt(int length, int width, float side_length, float side_width) {
+    this.length = length;
     this.width = width;
-    this.res = res;
+    this.side_length = side_length;
+    this.side_width = side_width;
   }
 
 }

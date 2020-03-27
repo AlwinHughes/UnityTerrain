@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planet : MonoBehaviour
-{
+
+public class Planet : MonoBehaviour {
 
   [SerializeField]
   MeshFilter[] mesh_filters;
@@ -25,7 +25,6 @@ public class Planet : MonoBehaviour
     init();
     generateMesh();
   }
-
 
 
   void init(){

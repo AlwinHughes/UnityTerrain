@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17bdc1647681e8db48c117126cc2246c, type: 3}
-  m_Name: smooth_def
+  m_Script: {fileID: 11500000, guid: f405a2ab1d3d1d552960bf75e197d173, type: 3}
+  m_Name: dune_3
   m_EditorClassIdentifier: 
-  amplitude_ratio: 0.3
-  scale_ratio: 3
-  num_octaves: 3
-  enabled: 1
+  types: 
+  options: []
+  editors: []
+  foldouts: 

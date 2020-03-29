@@ -20,14 +20,16 @@ public class Chunk : MonoBehaviour {
   [SerializeField]
   public GameObject mesh_obj;
 
-  [SerializeField]
   public bool noise_option_foldout;
   public bool generator_foldout;
+  public bool col_set_foldout;
 
   private Vector3[] verts;
   private int[] triangles;
 
   public TGopt tgopt;
+
+  public ColourSettings col_set;
 
 
   //[SerializeField]
@@ -59,16 +61,27 @@ public class Chunk : MonoBehaviour {
   void initMesh(Transform t) {
 
     Debug.Log("init mesh");
+    if(col_set == null || tgopt == null) {
+      Debug.Log("missing variables");
+      return;
+    }
     mesh_obj = new GameObject("mesh");
     mesh_obj.transform.parent = t;
     Vector3 pos = new Vector3(t.position.x + x, t.position.y, t.position.z + y);
     mesh_obj.transform.position = pos;
 
-    mesh_obj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
+
+    MeshRenderer mr = mesh_obj.AddComponent<MeshRenderer>();
+    mr.sharedMaterial = new Material(Shader.Find("Standard"));
+    mr.sharedMaterial.color = col_set.colour;
 
     mesh_filter = mesh_obj.AddComponent<MeshFilter>();
 
     mesh_filter.mesh = new Mesh();
+  }
+
+  public void onColChange() {
+    mesh_obj.GetComponent<MeshRenderer>().sharedMaterial.color = col_set.colour;
   }
 
   public void transformPosition(Vector3 pos) {
@@ -96,7 +109,13 @@ public class Chunk : MonoBehaviour {
   void OnValidate() {
     Debug.Log("on validate");
 
-    if(mesh_obj == null) {
+    if(mesh_obj == null || mesh_filter == null) {
+      if(mesh_obj == null) 
+        Debug.Log("mesh_obj is null");
+      
+      if(mesh_filter == null) 
+        Debug.Log("mesh_filter is null");
+      
       Debug.Log("call init");
       initMesh(transform);
     }

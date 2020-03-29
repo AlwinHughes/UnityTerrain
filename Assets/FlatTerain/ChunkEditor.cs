@@ -8,6 +8,7 @@ public class ChunkEditor : Editor {
 
   Chunk chunk;
   Editor noise_editor;
+  Editor col_editor;
 
   public override void OnInspectorGUI() {
     DrawDefaultInspector();
@@ -15,6 +16,8 @@ public class ChunkEditor : Editor {
     chunk = (Chunk) target;
 
     DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
+
+    DrawSettingsEditor(chunk.col_set, chunk.onColChange, ref chunk.col_set_foldout, ref col_editor);
 
 
     for(int i = 0; i < chunk.tgopt.options.Length; i++) {

@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f405a2ab1d3d1d552960bf75e197d173, type: 3}
   m_Name: dunes
   m_EditorClassIdentifier: 
-  types: 
-  options: []
-  editors: []
-  foldouts: 
+  types: 000000000000000000000000
+  options:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  editors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  foldouts: 000000

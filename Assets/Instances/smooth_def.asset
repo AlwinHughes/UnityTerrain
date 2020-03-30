@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bdc1647681e8db48c117126cc2246c, type: 3}
   m_Name: smooth_def
   m_EditorClassIdentifier: 
-  amplitude_ratio: 0.3
-  scale_ratio: 3
+  amplitude_ratio: 0.355
+  scale_ratio: 3.96
   num_octaves: 3
   enabled: 1

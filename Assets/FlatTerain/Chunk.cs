@@ -29,7 +29,13 @@ public class Chunk : MonoBehaviour {
 
   public TGopt tgopt;
 
+  [SerializeField]
   public ColourSettings col_set;
+  [SerializeField]
+  public ColourGenerator col_gen;
+
+  [SerializeField]
+  private MinMax terrain_mm;
 
 
   //[SerializeField]
@@ -65,6 +71,11 @@ public class Chunk : MonoBehaviour {
       Debug.Log("missing variables");
       return;
     }
+
+
+    terrain_mm = new MinMax();
+    col_gen = new ColourGenerator(col_set);
+
     mesh_obj = new GameObject("mesh");
     mesh_obj.transform.parent = t;
     Vector3 pos = new Vector3(t.position.x + x, t.position.y, t.position.z + y);
@@ -72,8 +83,10 @@ public class Chunk : MonoBehaviour {
 
 
     MeshRenderer mr = mesh_obj.AddComponent<MeshRenderer>();
-    mr.sharedMaterial = new Material(Shader.Find("Standard"));
-    mr.sharedMaterial.color = col_set.colour;
+    mr.sharedMaterial = col_set.material;
+    //mr.sharedMaterial = new Material(Shader.Find("Standard"));
+    //mr.sharedMaterial.color = col_set.colour;
+
 
     mesh_filter = mesh_obj.AddComponent<MeshFilter>();
 
@@ -81,7 +94,9 @@ public class Chunk : MonoBehaviour {
   }
 
   public void onColChange() {
-    mesh_obj.GetComponent<MeshRenderer>().sharedMaterial.color = col_set.colour;
+    Debug.Log("On col_set change");
+    mesh_obj.GetComponent<MeshRenderer>().sharedMaterial = col_set.material;
+    //mesh_obj.GetComponent<MeshRenderer>().sharedMaterial.color = col_set.colour;
   }
 
   public void transformPosition(Vector3 pos) {
@@ -162,6 +177,9 @@ public class Chunk : MonoBehaviour {
     original_noise_grid = new float[noise_options.res*noise_options.res];
     generateTerrainIfNotReady();
     applyTerrain();
+    terrain_mm = new MinMax();
+    terrain_mm.addValues(noise_grid);
+    terrain_mm.log();
     constructMesh();
   }
 
@@ -173,24 +191,35 @@ public class Chunk : MonoBehaviour {
     }
   }
 
+  /*
   public void onNoiseOptionsChanged() {
     if(noise_options.res > 1) {
+      terrain_mm.resetMinMax();
       original_noise_grid = new float[noise_options.res*noise_options.res];
       generateTerrain();
       applyTerrain();
+      terrain_mm.addValues(noise_grid);
+      terrain_mm.log();
+      col_gen.updateCol(terrain_mm);
       constructMesh();
     } else {
       Debug.Log("ignoring as res is 0 or 1");
     }
   }
+  */
 
   public void onTerrainOptionsChange() {
     Debug.Log("on terraain options changed");
     if(noise_options.res > 1) {
       original_noise_grid = new float[noise_options.res*noise_options.res];
+      terrain_mm.resetMinMax();
       generateTerrain();
       applyTerrain();
+      terrain_mm.addValues(noise_grid);
+      terrain_mm.log();
+      col_gen.updateCol(terrain_mm);
       constructMesh();
+
     } else {
       Debug.Log("ignoring as res is 0 or 1");
     }
@@ -209,7 +238,7 @@ public class Chunk : MonoBehaviour {
     Debug.Log("generate terrain if not ready");
     for(int i = 0; i < generators.Length; i++) {
       if(generators[i].noise_store == null){
-        Debug.Log("generator " + i + " was not ready");
+        //Debug.Log("generator " + i + " was not ready");
         generators[i].generateTerrain(noise_options);
       }
     }
@@ -241,7 +270,7 @@ public class Chunk : MonoBehaviour {
       for(int j = 0; j < noise_options.res; j++) {
         vert_index = i + noise_options.res * j;
 
-        verts[vert_index] = new Vector3(i* inv_res, noise_grid[vert_index], j * inv_res);
+        verts[vert_index] = new Vector3(i * inv_res, noise_grid[vert_index], j * inv_res);
 
         if(i != noise_options.res -1 && j != noise_options.res -1) {
 

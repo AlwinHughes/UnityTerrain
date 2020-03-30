@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f78ac0a72f55bcd5181a061d942ae09f, type: 3}
   m_Name: ridge_def
   m_EditorClassIdentifier: 
-  power: 0
-  scale_ratio: 0
-  scale: 0
-  amplitude_ratio: 0
-  num_octaves: 0
+  power: 0.24
+  scale_ratio: 1
+  scale: 2
+  amplitude_ratio: 0.318
+  num_octaves: 3
   multiply: 0
-  enabled: 0
+  enabled: 1

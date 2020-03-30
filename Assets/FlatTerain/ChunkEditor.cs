@@ -15,6 +15,11 @@ public class ChunkEditor : Editor {
 
     chunk = (Chunk) target;
 
+
+    if(GUILayout.Button("Update Col")) {
+      chunk.onColChange();
+    }
+
     DrawSettingsEditor(chunk.noise_options, chunk.onTerrainOptionsChange, ref chunk.noise_option_foldout, ref noise_editor);
 
     DrawSettingsEditor(chunk.col_set, chunk.onColChange, ref chunk.col_set_foldout, ref col_editor);

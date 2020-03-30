@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f405a2ab1d3d1d552960bf75e197d173, type: 3}
   m_Name: terrain2
   m_EditorClassIdentifier: 
-  types: 
-  options: []
-  editors: []
-  foldouts: 
+  types: 040000000100000005000000
+  options:
+  - {fileID: 11400000, guid: 5b0122cdd996362ac8f5e9feb044e682, type: 2}
+  - {fileID: 11400000, guid: 8b8b4e7c143f0f35ca5d75fb9f89ddb0, type: 2}
+  - {fileID: 11400000, guid: a3e726d66e4c79e82af5cd7303b135c2, type: 2}
+  editors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  foldouts: 010101

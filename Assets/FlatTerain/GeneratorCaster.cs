@@ -57,7 +57,7 @@ public static class GeneratorCaster {
 
     Debug.Log("something has gone very wrong");
     throw new System.Exception("unknown generator type");
-    return null;
+    //return null;
   }
 }
 

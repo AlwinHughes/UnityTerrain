@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f405a2ab1d3d1d552960bf75e197d173, type: 3}
-  m_Name: def
+  m_Name: terrain1
   m_EditorClassIdentifier: 
   types: 040000000100000005000000
   options:
@@ -21,4 +21,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  foldouts: 000000
+  foldouts: 010101

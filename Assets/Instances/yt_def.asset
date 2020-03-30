@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: yt_def
   m_EditorClassIdentifier: 
   take_average: 0
+  enabled: 1

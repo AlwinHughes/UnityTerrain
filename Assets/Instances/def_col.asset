@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e3ab433bf517d56bc7a91479ad90c4, type: 3}
   m_Name: def_col
   m_EditorClassIdentifier: 
-  colour: {r: 0, g: 0, b: 0, a: 0}
+  colour: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 0}
+  material: {fileID: 2100000, guid: 39ffbaaa40dbef98cbe49fcb8974dc02, type: 2}

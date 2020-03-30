@@ -6,4 +6,6 @@ using UnityEngine;
 public class ColourSettings : ScriptableObject {
 
   public Color colour;
+
+  public Material material;
 }

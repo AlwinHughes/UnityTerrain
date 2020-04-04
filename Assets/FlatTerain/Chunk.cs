@@ -35,7 +35,7 @@ public class Chunk : MonoBehaviour {
   public ColourGenerator col_gen;
 
   [SerializeField]
-  private MinMax terrain_mm;
+  MinMax terrain_mm;
 
 
   //[SerializeField]
@@ -76,6 +76,8 @@ public class Chunk : MonoBehaviour {
     terrain_mm = new MinMax();
     col_gen = new ColourGenerator(col_set);
 
+    col_gen.updateColours();
+
     mesh_obj = new GameObject("mesh");
     mesh_obj.transform.parent = t;
     Vector3 pos = new Vector3(t.position.x + x, t.position.y, t.position.z + y);
@@ -95,6 +97,10 @@ public class Chunk : MonoBehaviour {
 
   public void onColChange() {
     Debug.Log("On col_set change");
+
+
+    col_gen.updateColours();
+    
     mesh_obj.GetComponent<MeshRenderer>().sharedMaterial = col_set.material;
     //mesh_obj.GetComponent<MeshRenderer>().sharedMaterial.color = col_set.colour;
   }
@@ -165,6 +171,8 @@ public class Chunk : MonoBehaviour {
       */
     }
 
+    col_gen = new ColourGenerator(col_set);
+
 
     //Debug.Log("vert length : " + mesh_filter.sharedMesh.triangles.Length);
 
@@ -200,7 +208,7 @@ public class Chunk : MonoBehaviour {
       applyTerrain();
       terrain_mm.addValues(noise_grid);
       terrain_mm.log();
-      col_gen.updateCol(terrain_mm);
+      col_gen.updateHeight(terrain_mm);
       constructMesh();
     } else {
       Debug.Log("ignoring as res is 0 or 1");
@@ -217,7 +225,7 @@ public class Chunk : MonoBehaviour {
       applyTerrain();
       terrain_mm.addValues(noise_grid);
       terrain_mm.log();
-      col_gen.updateCol(terrain_mm);
+      col_gen.updateHeight(terrain_mm);
       constructMesh();
 
     } else {
@@ -242,6 +250,11 @@ public class Chunk : MonoBehaviour {
         generators[i].generateTerrain(noise_options);
       }
     }
+  }
+
+
+  public void getGradMatrix() {
+    //for(int i = 0; i < 
   }
 
 

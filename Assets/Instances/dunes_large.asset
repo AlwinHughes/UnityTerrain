@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c02251a05a214c49280b4ba998b0cae0, type: 3}
-  m_Name: New Smooth Strech Opt
+  m_Name: dunes_large
   m_EditorClassIdentifier: 
   scale_x: 0
   scale_y: 0

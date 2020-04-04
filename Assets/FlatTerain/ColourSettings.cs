@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class ColourSettings : ScriptableObject {
 
-  public Color colour;
+  public Gradient col_grad;
 
   public Material material;
 }
